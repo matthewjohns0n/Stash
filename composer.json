@@ -1,7 +1,7 @@
 {
     "name": "croxton/stash",
     "description": "Extended templating for ExpressionEngine",
-    "version": "3.1.2",
+    "version": "3.2.0",
     "homepage": "https://github.com/croxton/Stash",
     "support": {
         "docs": "https://github.com/croxton/Stash/blob/master/README.md",
@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.4 <8.5",
         "ext-curl": "*"
     }
 }

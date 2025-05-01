@@ -15,6 +15,11 @@ class Stash_model extends CI_Model {
     protected static $inserted_keys = array();
     protected static $queue;
 
+    // Add property declarations for PHP 8.2 compatibility
+    protected $db;
+    protected $EE;
+    protected $config;
+
     // default bundle types
     protected static $bundle_ids = array(
         'default'   => 1,
@@ -58,7 +63,7 @@ class Stash_model extends CI_Model {
      * @param string $label
      * @return boolean
      */
-    public function insert_key(string $key, int $bundle_id = 1, string $session_id = NULL, int $site_id = 1, int $expire = 0, string $parameters = '', string $label = '')
+    public function insert_key(string $key, int $bundle_id = 1, ?string $session_id = NULL, int $site_id = 1, int $expire = 0, string $parameters = '', string $label = '')
     {
         $cache_key = $key . '_'. $bundle_id .'_' .$site_id . '_' . $session_id;
 
@@ -109,7 +114,7 @@ class Stash_model extends CI_Model {
      * @param string|null $parameters
      * @return boolean
      */
-    public function update_key(string $key, int $bundle_id = 1, string $session_id = '', int $site_id = 1, int $expire = 0, string $parameters = NULL)
+    public function update_key(string $key, int $bundle_id = 1, string $session_id = '', int $site_id = 1, int $expire = 0, ?string $parameters = NULL)
     {
         $cache_key = $key . '_'. $bundle_id .'_' .$site_id . '_' . $session_id;
 
@@ -254,7 +259,7 @@ class Stash_model extends CI_Model {
      * @param integer $invalidate Delay until cached item expires (seconds)
      * @return boolean
      */
-    public function delete_key(string $key, $bundle_id = FALSE, string $session_id = NULL, int $site_id = 1, int $invalidate=0)
+    public function delete_key(string $key, $bundle_id = FALSE, ?string $session_id = NULL, int $site_id = 1, int $invalidate=0)
     {
         $this->db->where('key_name', $key)
             ->where('site_id', $site_id);
@@ -308,7 +313,7 @@ class Stash_model extends CI_Model {
      * @param integer $invalidate Delay until cached item expires (seconds)
      * @return boolean
      */
-    public function delete_matching_keys($bundle_id = FALSE, string $session_id=NULL, int $site_id = 1, string $regex=NULL, int $invalidate=0)
+    public function delete_matching_keys($bundle_id = FALSE, ?string $session_id=NULL, int $site_id = 1, ?string $regex=NULL, int $invalidate=0)
     {
         $deleted = FALSE; // have keys been deleted from the database?
         $clear_static = TRUE; // attempt to delete corresponding *individual* static cache files?
@@ -736,7 +741,7 @@ class Stash_model extends CI_Model {
      * @param string|null $parameters
      * @return boolean
      */
-    private function _write_file(string $uri, int $site_id, string $parameters = NULL)
+    private function _write_file(string $uri, int $site_id, ?string $parameters = NULL)
     {
         ee()->load->helper('file');
 
@@ -759,8 +764,9 @@ class Stash_model extends CI_Model {
     /**
      * Delete a static file
      *
+     * @access private
      * @param string $uri
-     * @param int $site_id
+     * @param integer $site_id
      * @return boolean
      */
     private function _delete_file(string $uri = '/', int $site_id = 1)
